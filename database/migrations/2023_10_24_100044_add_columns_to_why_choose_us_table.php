@@ -11,16 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('sliders', function (Blueprint $table) {
-            $table->id();
-            $table->text('image');
-            $table->string('offer')->nullable();
+        Schema::table('why_choose_us', function (Blueprint $table) {
+            $table->string('icon');
             $table->string('title');
-            $table->string('sub_title');
-            $table->string('short_description');
-            $table->string('button_link')->nullable();
+            $table->text('short_description');
             $table->boolean('status')->default(1);
-            $table->timestamps();
         });
     }
 
@@ -29,6 +24,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('sliders');
+        Schema::table('why_choose_us', function (Blueprint $table) {
+            $table->dropColumn(['icon', 'title', 'short_description', 'status']);
+        });
     }
 };

@@ -1,16 +1,17 @@
 @extends('admin.layouts.master')
 @section('content')
     <section class="section">
+
         <div class="section-header">
-            <h1>Slider</h1>
+            <h1>Products</h1>
         </div>
 
         <div class="card card-primary">
             <div class="card-header">
-                <h4>All Sliders</h4>
+                <h4>All Products</h4>
                 <div class="card-header-action">
-                    <a href="{{ route('admin.slider.create') }}" class="btn btn-primary">
-                        Create New
+                    <a href="{{ route('admin.product.create') }}" class="btn btn-primary">
+                        Create New Product
                     </a>
                 </div>
             </div>

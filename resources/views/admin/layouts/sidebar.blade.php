@@ -9,7 +9,7 @@
     </form>
     <ul class="navbar-nav navbar-right">
 
-        <li class="dropdown"><a href="#" data-toggle="dropdown"
+        <li class="dropdown"><a href="{{ route('admin.dashboard') }}" data-toggle="dropdown"
                 class="nav-link dropdown-toggle nav-link-lg nav-link-user">
                 <img alt="image" src="{{ asset(auth()->user()->avatar) }}" class="rounded-circle mr-1">
                 <div class="d-sm-none d-lg-inline-block">Hi, {{ auth()->user()->name }}</div>
@@ -48,18 +48,51 @@
 <div class="main-sidebar sidebar-style-2">
     <aside id="sidebar-wrapper">
         <div class="sidebar-brand">
-            <a href="index.html">Stisla</a>
+            <a href="{{ route('admin.dashboard') }}">Stisla</a>
         </div>
         <div class="sidebar-brand sidebar-brand-sm">
-            <a href="index.html">St</a>
+            <a href="{{ route('admin.dashboard') }}">St</a>
         </div>
         <ul class="sidebar-menu">
             <li class="menu-header">Dashboard</li>
-            <li class="active"><a class="nav-link" href={{ route('admin.dashboard') }}><i
-                        class="fas fa-fire"></i>General</a>
+            <li class="{{ Request::is('admin/dashboard') ? 'active' : '' }}">
+                <a class="nav-link" href="{{ route('admin.dashboard') }}">
+                    <i class="fas fa-fire"></i>General
+                </a>
             </li>
+
             <li class="menu-header">Starter</li>
-            <li><a class="nav-link" href="{{ route('admin.slider.index') }}"><i class="fas fa-fire"></i>Slider</a></li>
+
+            <li class="{{ Request::is('admin/slider*') ? 'active' : '' }}">
+                <a class="nav-link" href="{{ route('admin.slider.index') }}">
+                    <i class="fas fa-sliders-h"></i>Slider
+                </a>
+            </li>
+            <li class="{{ Request::is('admin/why-choose-us*') ? 'active' : '' }}">
+                <a class="nav-link" href="{{ route('admin.why-choose-us.index') }}">
+                    <i class="fas fa-lightbulb"></i>Why choose us
+                </a>
+            </li>
+
+            <li
+                class="dropdown  {{ Request::is('admin/category*') || Request::is('admin/product*') ? 'active' : '' }}">
+                <a href="#" class="nav-link has-dropdown" data-toggle="dropdown">
+                    <i class="fa fa-columns"></i><span>Manage Restaurant</span>
+                </a>
+
+
+                <ul class="dropdown-menu">
+                    <li class="{{ Request::is('admin/category*') ? 'active' : '' }}">
+                        <a href="{{ route('admin.category.index') }}" class="nav-link">Product Categories</a>
+                    </li>
+                    <li class="{{ Request::is('admin/product*') ? 'active' : '' }}">
+                        <a href="{{ route('admin.product.index') }}" class="nav-link">Products</a>
+                    </li>
+                </ul>
+
+
+            </li>
+
 
         </ul>
     </aside>
