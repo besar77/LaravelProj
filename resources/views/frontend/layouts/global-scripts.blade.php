@@ -1,0 +1,31 @@
+<script>
+    function loadProductModal(productId) {
+
+        $.ajax({
+            type: "GET",
+            url: '{{ route('load-product-modal', ':productId') }}'.replace(':productId', productId),
+            beforeSend: function() {
+                $('.overlay-container').removeClass('d-none');
+                $('.overlay').addClass('active');
+            },
+            success: function(response) {
+
+                $('.load_product_modal_body').html(response);
+                $('#cartModal').modal('show');
+            },
+            error: function(xhr, status, error) {
+                console.log(error);
+            },
+            complete: function() {
+                $('.overlay').removeClass('active');
+                $('.overlay-container').addClass('d-none');
+            }
+        });
+
+    }
+
+    //Update Sidebar cart
+    function updateSidebarCart() {
+
+    }
+</script>

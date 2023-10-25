@@ -89,8 +89,10 @@
                         <a href="{{ route('admin.product.index') }}" class="nav-link">Products</a>
                     </li>
                 </ul>
+            </li>
 
-
+            <li class="{{ Request::is('admin/setting*') ? 'active' : '' }}">
+                <a class="nav-link" href="{{ route('admin.setting.index') }}"><i class="fas fa-wrench"></i>Settings</a>
             </li>
 
 

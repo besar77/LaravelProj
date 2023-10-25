@@ -4,7 +4,11 @@ use App\Http\Controllers\Admin\AdminAuthController;
 use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\Admin\ProductGalleryController;
+use App\Http\Controllers\Admin\ProductOptionController;
+use App\Http\Controllers\Admin\ProductSizeController;
 use App\Http\Controllers\Admin\ProfileController;
+use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\SliderController;
 use App\Http\Controllers\Admin\WhyChooseUsController;
 use Illuminate\Support\Facades\Route;
@@ -32,4 +36,18 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
 
     //Product resource
     Route::resource('product', ProductController::class);
+
+    //Product gallery photo
+    Route::get('product-gallery/{product}', [ProductGalleryController::class, 'index'])->name('product-gallery.show-index');
+    Route::resource('product-gallery', ProductGalleryController::class);
+
+    //Porudct size
+    Route::get('product-size/{product}', [ProductSizeController::class, 'index'])->name('product-size.show-index');
+    Route::resource('product-size', ProductSizeController::class);
+    //Product options
+    Route::resource('product-option', ProductOptionController::class);
+
+    //Settins
+    Route::get('/setting', [SettingController::class, 'index'])->name('setting.index');
+    Route::put('/general-setting', [SettingController::class, 'UpdateGeneralSetting'])->name('general-setting.update');
 });
