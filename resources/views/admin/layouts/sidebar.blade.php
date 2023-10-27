@@ -79,8 +79,6 @@
                 <a href="#" class="nav-link has-dropdown" data-toggle="dropdown">
                     <i class="fa fa-columns"></i><span>Manage Restaurant</span>
                 </a>
-
-
                 <ul class="dropdown-menu">
                     <li class="{{ Request::is('admin/category*') ? 'active' : '' }}">
                         <a href="{{ route('admin.category.index') }}" class="nav-link">Product Categories</a>
@@ -91,11 +89,23 @@
                 </ul>
             </li>
 
-            <li class="{{ Request::is('admin/setting*') ? 'active' : '' }}">
-                <a class="nav-link" href="{{ route('admin.setting.index') }}"><i class="fas fa-wrench"></i>Settings</a>
+            {{-- manage ecommerce dropdown --}}
+            <li
+                class="dropdown  {{ Request::is('admin/category*') || Request::is('admin/product*') ? 'active' : '' }}">
+                <a href="#" class="nav-link has-dropdown" data-toggle="dropdown">
+                    <i class="fa fa-columns"></i><span>Manage Ecommerce</span>
+                </a>
+                <ul class="dropdown-menu">
+                    <li class="{{ Request::is('admin/coupon*') ? 'active' : '' }}">
+                        <a href="{{ route('admin.coupon.index') }}" class="nav-link">Coupon</a>
+                    </li>
+                </ul>
             </li>
 
 
+            <li class="{{ Request::is('admin/setting*') ? 'active' : '' }}">
+                <a class="nav-link" href="{{ route('admin.setting.index') }}"><i class="fas fa-wrench"></i>Settings</a>
+            </li>
         </ul>
     </aside>
 </div>

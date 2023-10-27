@@ -27,12 +27,64 @@ if (!function_exists('currencyPosition')) {
 
     function currencyPosition($price): string
     {
-        $formattedPrice = number_format($price, 2);
+        if (is_numeric($price)) {
+            // dd('a JEMI NE PIKE');
+            $formattedPrice = number_format($price, 2);
+        } else {
+            $formattedPrice = $price;
+        }
 
         if (config('settings.site_currency_icon_position') === 'left') {
             return config('settings.site_currency_icon') . $formattedPrice;
         } else {
             return $formattedPrice . config('settings.site_currency_icon');
         }
+    }
+}
+
+
+//Calculate cart total price
+if (!function_exists('cartTotal')) {
+
+    function cartTotal()
+    {
+        $total = 0;
+        foreach (Cart::content() as $item) {
+            $productPrice = $item->price;
+            $sizePrice = $item->options?->product_size[0]['price'] ?? 0;
+            // dd($sizePrice);
+            $optionsPrice = 0;
+            foreach ($item->options->product_options as $option) {
+                $optionsPrice += $option['price'];
+            }
+
+            $total += ($productPrice + $sizePrice + $optionsPrice) * $item->qty;
+        }
+
+        return $total;
+    }
+}
+
+//Calculate product total price for cart page
+if (!function_exists('productTotal')) {
+
+    function productTotal($rowId)
+    {
+        $total = 0;
+        $product = Cart::get($rowId);
+
+
+        $productPrice = $product->price;
+        $sizePrice = $product->options?->product_size[0]['price'] ?? 0;
+        // dd($sizePrice);
+        $optionsPrice = 0;
+        foreach ($product->options->product_options as $option) {
+            $optionsPrice += $option['price'];
+        }
+
+        $total += ($productPrice + $sizePrice + $optionsPrice) * $product->qty;
+
+
+        return $total;
     }
 }

@@ -16,6 +16,7 @@
             <i class="fas fa-star-half-alt"></i>
             <i class="far fa-star"></i>
             <span>(201)</span>
+            {{-- <h1>Quantity!!! - {{ $product->quantity }}</h1> --}}
         </p>
         <h4 class="price">
             @if ($product->offer_price > 0)
@@ -84,7 +85,11 @@
             </div>
         </div>
         <ul class="details_button_area d-flex flex-wrap">
+            @if($product->quantity === 0)
+                <li><button class="common_btn modal_cart_button bg-danger" type="button" disabled>Stock Out</button></li>
+            @else
             <li><button class="common_btn modal_cart_button" type="submit">add to cart</button></li>
+            @endif
         </ul>
     </div>
 
@@ -157,8 +162,11 @@
         $('#modal_add_to_cart_form').on('submit', function(e) {
             e.preventDefault();
 
+            console.log('a jemi ne pike');
+
             //Validation
-            let selectedSize = $('input[name="product_size"]');
+            let selectedSize = $(this).find('input[name="product_size"]');
+            console.log(selectedSize);
             if (selectedSize.length > 0) {
                 if ($('input[name="product_size"]:checked').val() === undefined) {
                     toastr.error('Please select a size');
@@ -179,10 +187,13 @@
                     );
                 },
                 success: function(response) {
+                    updateSidebarCart();
                     toastr.success(response.message);
                 },
                 error: function(xhr, status, error) {
-                    let errorMsg = xhr.responseJson.message;
+                    console.log(xhr , status , error);
+                    let errorMsg = xhr.responseJSON.message;
+                    console.log(errorMsg);
                     toastr.error(errorMsg);
                 },
                 complete: function() {

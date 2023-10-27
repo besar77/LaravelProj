@@ -59,7 +59,8 @@
                     </div>
                 </li>
                 <li>
-                    <a class="cart_icon"><i class="fas fa-shopping-basket"></i> <span>5</span></a>
+                    <a class="cart_icon"><i class="fas fa-shopping-basket"></i> <span
+                            id="cart_count_span_id">{{ count(Cart::content()) }}</span></a>
                 </li>
                 <li>
                     <a href="{{ route('login') }}"><i class="fas fa-user"></i></a>
@@ -76,10 +77,10 @@
 <div class="fp__menu_cart_area">
     <div class="fp__menu_cart_boody">
         <div class="fp__menu_cart_header">
-            <h5>total item (05)</h5>
+            <h5 id="cart_total_h5_id">total item ({{ count(Cart::content()) }})</h5>
             <span class="close_cart"><i class="fal fa-times"></i></span>
         </div>
-        <ul>
+        <ul class="cart_contents">
             @foreach (Cart::content() as $cartProduct)
                 <li>
                     <div class="menu_cart_img">
@@ -91,13 +92,17 @@
                             href="{{ route('product.show', $cartProduct->options->product_info['slug']) }}">{!! $cartProduct->name !!}
                         </a>
                         <p class="quantity">Qty: {{ $cartProduct->qty }}</p>
-                        <p class="size">{{ @$cartProduct->options->product_size['name'] }}</p>
+                        <p class="size">
+                            {{ @$cartProduct->options->product_size[0]['name'] }}{{ @$cartProduct->options->product_size[0]['price'] ? ': ' . currencyPosition(@$cartProduct->options->product_size[0]['price']) : '' }}
+                        </p>
                         @foreach (@$cartProduct->options->product_options as $cartProductOption)
-                            <span class="extra">{{ $cartProductOption['name'] }}</span>
+                            <span class="extra">{{ $cartProductOption['name'] }}:
+                                {{ currencyPosition($cartProductOption['price']) }}</span>
                         @endforeach
                         <p class="price">{{ currencyPosition($cartProduct->price) }}</del></p>
                     </div>
-                    <span class="del_icon"><i class="fal fa-times"></i></span>
+                    <span class="del_icon" onclick="removeProductFromSidebar('{{ $cartProduct->rowId }}')"><i
+                            class="fal fa-times"></i></span>
                 </li>
             @endforeach
 
@@ -115,8 +120,8 @@
                 <span class="del_icon"><i class="fal fa-times"></i></span>
             </li> --}}
         </ul>
-        <p class="subtotal">sub total <span>$1220.00</span></p>
-        <a class="cart_view" href="cart_view.html"> view cart</a>
+        <p class="subtotal">sub total <span class="cart_total_class">{{ currencyPosition(cartTotal()) }}</span></p>
+        <a class="cart_view" href="{{ route('cart.index') }}"> view cart</a>
         <a class="checkout" href="check_out.html">checkout</a>
     </div>
 </div>

@@ -103,6 +103,7 @@ class ProductDataTable extends DataTable
             Column::make('category.name'),
             Column::make('price'),
             Column::make('offer_price'),
+            Column::make('quantity'),
             Column::make('show_at_home'),
             Column::make('status'),
 
