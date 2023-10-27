@@ -23,17 +23,6 @@ class FrontendController extends Controller
         $whyChooseUs = WhyChooseUs::where("status", 1)->get();
         $categories = Category::where(['show_at_home' => 1, 'status' => 1])->get();
 
-        // $allProducts = collect();
-        // foreach ($categories as $c) {
-        //     $products = Product::where(['show_at_home' => 1, 'status' => 1, 'category_id' => $c->id])
-        //         ->orderBy('id', 'desc')
-        //         ->take(8)
-        //         ->get();
-        //     $allProducts = $allProducts->concat($products);
-        // }
-
-        // dd($allProducts);
-
         return view(
             'frontend.home.index',
             compact(
@@ -63,8 +52,16 @@ class FrontendController extends Controller
 
     public function loadProductModal(string $productId)
     {
-        $product = Product::with(['productSizes','productOptions'])->findOrFail($productId);
-        return view('frontend.layouts.ajax-files.product-popup-modal' , compact('product'))->render(); //sends view like a json data
+        $product = Product::with(['productSizes', 'productOptions'])->findOrFail($productId);
+        return view('frontend.layouts.ajax-files.product-popup-modal', compact('product'))->render(); //sends view like a json data
 
+    }
+
+    public function applyCoupon(Request $request)
+    {
+        $code = $request->input('code');
+        $subTotal = $request->input('subTotal');
+
+        dd($code, $subTotal);
     }
 }

@@ -1,8 +1,8 @@
 @extends('frontend.layouts.master')
 @section('content')
     <!--=============================
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            BREADCRUMB START
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        ==============================-->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    BREADCRUMB START
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                ==============================-->
     <section class="fp__breadcrumb" style="background: url({{ asset('frontend/images/counter_bg.jpg') }});">
         <div class="fp__breadcrumb_overlay">
             <div class="container">
@@ -17,13 +17,13 @@
         </div>
     </section>
     <!--=============================
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            BREADCRUMB END
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        ==============================-->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    BREADCRUMB END
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                ==============================-->
 
 
     <!--============================
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            CART VIEW START
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        ==============================-->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    CART VIEW START
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                ==============================-->
     <section class="fp__cart_view mt_125 xs_mt_95 mb_100 xs_mb_70">
         <div class="container">
             <div class="row">
@@ -98,17 +98,19 @@
                                             </td>
 
                                             <td class="fp__pro_icon">
-                                                <a href="javascript:;" class="remove_cart_product" data-id="{{ $product->rowId }}"><i class="far fa-times"></i></a>
+                                                <a href="javascript:;" class="remove_cart_product"
+                                                    data-id="{{ $product->rowId }}"><i class="far fa-times"></i></a>
                                             </td>
                                         </tr>
-                                        @endforeach
-                                        @if(Cart::content()->count() > 0)
+                                    @endforeach
+                                    @if (Cart::content()->count() > 0)
                                         <tr class="d-none" id="cart_empty_td">
                                         @elseif(Cart::content()->count() === 0)
                                         <tr>
-                                            @endif
-                                                <td colspan="6" class="text-center" style="width: 100%; display:inline;">Cart is empty</td>
-                                            </tr>
+                                    @endif
+                                    <td colspan="6" class="text-center" style="width: 100%; display:inline;">Cart is
+                                        empty</td>
+                                    </tr>
 
 
 
@@ -128,7 +130,7 @@
                         <p>discount: <span>$10.00</span></p>
                         <p class="total"><span>total:</span> <span>$134.00</span></p>
                         <form id="coupon_form">
-                            <input type="text" name="code" placeholder="Coupon Code">
+                            <input type="text" id="coupone_code" name="code" placeholder="Coupon Code">
                             <button type="submit">apply</button>
                         </form>
                         <a class="common_btn" href=" #">checkout</a>
@@ -138,31 +140,32 @@
         </div>
     </section>
     <!--============================
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            CART VIEW END
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        ==============================-->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    CART VIEW END
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                ==============================-->
 @endsection
 
 @push('scripts')
     <script>
-                    $(document).ready(function() {
-
-                        $('.increment').on('click', function(e) {
-                            // console.log("Click event triggered.");
+        $(document).ready(function() {
+            $('.increment').on('click', function(e) {
+                // console.log("Click event triggered.");
                 let inputField = $(this).siblings('.quantity');
                 let currentValue = parseInt(inputField.val());
                 let rowId = inputField.data('id');
-                            inputField.val(currentValue + 1);
-                        // console.log(inputField.val());
+                inputField.val(currentValue + 1);
+                // console.log(inputField.val());
                 // console.log("Before calling cartQtyUpdate with rowId:", rowId, "qty:", inputField.val());
-                cartQtyUpdate(rowId, inputField.val() , function(response){
+                cartQtyUpdate(rowId, inputField.val(), function(response) {
                     console.log(response);
 
-                    if(response.status === 'success'){
+                    if (response.status === 'success') {
                         inputField.val(response.qty);
                         let totalProdAmount = response.product_total.toFixed(2);
-                        $('#h6_total_price_single_prod-' + rowId).text("{{ currencyPosition(":totalProdAmount") }}".replace(':totalProdAmount', totalProdAmount));
+                        $('#h6_total_price_single_prod-' + rowId).text(
+                            "{{ currencyPosition(':totalProdAmount') }}".replace(
+                                ':totalProdAmount', totalProdAmount));
                         // $('#span_cart_sub_total').text("{{ cartTotal() }}");
-                    }else if(response.status === 'error'){
+                    } else if (response.status === 'error') {
                         inputField.val(response.qty);
                         toastr.error(response.message);
                     }
@@ -178,14 +181,15 @@
 
                 if (currentValue > 1) {
                     inputField.val(currentValue - 1);
-                    cartQtyUpdate(rowId, inputField.val() , function(response){
+                    cartQtyUpdate(rowId, inputField.val(), function(response) {
 
-                        if(response.status === 'success'){
-                        inputField.val(response.qty);
-                        let totalProdAmount = response.product_total.toFixed(2);
-                        $('#h6_total_price_single_prod-' + rowId).text("{{ currencyPosition(":totalProdAmount") }}".replace(':totalProdAmount', totalProdAmount));
-                        }else if(response.status === 'error')
-                        {
+                        if (response.status === 'success') {
+                            inputField.val(response.qty);
+                            let totalProdAmount = response.product_total.toFixed(2);
+                            $('#h6_total_price_single_prod-' + rowId).text(
+                                "{{ currencyPosition(':totalProdAmount') }}".replace(
+                                    ':totalProdAmount', totalProdAmount));
+                        } else if (response.status === 'error') {
                             inputField.val(response.qty);
                             toastr.error(response.message);
                         }
@@ -193,7 +197,7 @@
                 }
             });
 
-            function cartQtyUpdate(rowId, qty , callback) {
+            function cartQtyUpdate(rowId, qty, callback) {
                 $.ajax({
                     method: 'POST',
                     url: "{{ route('cart.quantity-update') }}",
@@ -206,19 +210,12 @@
                         showLoader();
                     },
                     success: function(response) {
-                        // console.log(response);
-                        // if(response.status !== 'error'){
-                        //     let totalProdAmount = response.product_total.toFixed(2);
-                        //     $('#h6_total_price_single_prod-' + rowId).text("{{ currencyPosition(":totalProdAmount") }}".replace(':totalProdAmount', totalProdAmount));
-                        // }else{
-                        //     toastr.error(response.message);
-                        // }
 
-                            if(callback && typeof callback === 'function'){
-                                callback(response);
-                            }
+                        if (callback && typeof callback === 'function') {
+                            callback(response);
+                        }
 
-                        },
+                    },
                     error: function(xhr, status, error) {
                         let errorMsg = xhr.responseJSON.message;
                         hideLoader();
@@ -230,19 +227,17 @@
                 });
             }
 
-            $('.remove_cart_product').on('click',function(e)
-            {
+            $('.remove_cart_product').on('click', function(e) {
                 e.preventDefault();
                 let rowId = $(this).data('id');
                 removeCartProduct(rowId);
                 $(this).closest('tr').remove();
             });
 
-        function removeCartProduct(rowId)
-            {
+            function removeCartProduct(rowId) {
                 $.ajax({
                     method: 'GET',
-                    url: '{{ route("cart-product-remove", "rowId") }}'.replace("rowId" , rowId),
+                    url: '{{ route('cart-product-remove', 'rowId') }}'.replace("rowId", rowId),
                     data: {
                         'rowId': rowId,
                     },
@@ -262,24 +257,23 @@
                 });
             }
 
-            $('.clear_all').on('click',function(){
+            $('.clear_all').on('click', function() {
                 removeAllProdsFromCart();
                 $('#productTable tr:not(:has(.clear_all))').remove();
             });
 
 
-            function removeAllProdsFromCart()
-            {
+            function removeAllProdsFromCart() {
                 $.ajax({
                     method: 'GET',
-                    url: '{{ route("cart-products-all-remove")}}',
+                    url: '{{ route('cart-products-all-remove') }}',
 
                     beforeSend: function() {
                         showLoader();
                     },
                     success: function(response) {
                         updateSidebarCart();
-                        $('#cart_empty_td').removeClass=('d-none');
+                        $('#cart_empty_td').removeClass = ('d-none');
 
                     },
                     error: function(xh, status, error) {
@@ -291,13 +285,44 @@
                 });
             }
 
+            $('#coupon_form').on('submit', function(e) {
+                e.preventDefault();
+
+                let code = $('#coupone_code').val();
+                let subTotal = getCartTotal();
+                // console.log(subTotal);
+
+                couponApply(code, subTotal);
+
+            });
 
 
+            function couponApply(code, subTotal) {
+
+                $.ajax({
+                    method: 'GET',
+                    url: "{{ route('apply-coupon') }}",
+                    data: {
+                        code: code,
+                        subTotal: subTotal
+                    },
+                    beforeSend: function() {
+
+                    },
+                    success: function(response) {
+
+                    },
+                    error: function(xhr, status, error) {
+
+                    },
+                    complete: function() {
+
+                    }
+                })
+
+            }
 
 
         });
-
-
-
     </script>
 @endpush

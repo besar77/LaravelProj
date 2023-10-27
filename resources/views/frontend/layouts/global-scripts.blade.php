@@ -89,4 +89,10 @@
         $('.overlay').removeClass('active');
         $('.overlay-container').addClass('d-none');
     }
+
+    //Get current total amount of cart
+    function getCartTotal() {
+        // console.log("{{ cartTotal() }}")
+        return parseFloat("{{ cartTotal() }}");
+    }
 </script>
