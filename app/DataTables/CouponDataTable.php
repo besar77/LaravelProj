@@ -22,7 +22,17 @@ class CouponDataTable extends DataTable
     public function dataTable(QueryBuilder $query): EloquentDataTable
     {
         return (new EloquentDataTable($query))
-            ->addColumn('action', 'coupon.action')
+        ->addColumn('action', function ($query) {
+            $edit = "<a href='" . route('admin.coupon.edit', $query->id) . "' class='btn btn-primary'><i class='fas fa-edit'></i></a>";
+            $delete = "<a href='" . route('admin.coupon.destroy', $query->id) . "' class='btn btn-danger ml-2 delete-item'><i class='fas fa-trash'></i></a>";
+
+            return $edit . $delete;
+        })
+        ->addColumn('status', function ($query) {
+            $statusClass = $query->status == 1 ? 'badge-primary' : 'badge-danger';
+            return "<span class='badge $statusClass'>" . ($query->status == 1 ? 'Active' : 'InActive') . "</span>";
+        })
+        ->rawColumns(['action','status'])
             ->setRowId('id');
     }
 
@@ -44,7 +54,7 @@ class CouponDataTable extends DataTable
                     ->columns($this->getColumns())
                     ->minifiedAjax()
                     //->dom('Bfrtip')
-                    ->orderBy(1)
+                    ->orderBy(0,'desc')
                     ->selectStyleSingle()
                     ->buttons([
                         Button::make('excel'),
@@ -62,15 +72,19 @@ class CouponDataTable extends DataTable
     public function getColumns(): array
     {
         return [
+            Column::make('id'),
+            Column::make('name'),
+            Column::make('code'),
+            Column::make('quantity'),
+            Column::make('discount_type'),
+            Column::make('discount'),
+            Column::make('expire_date'),
+            Column::make('status'),
             Column::computed('action')
                   ->exportable(false)
                   ->printable(false)
-                  ->width(60)
+                  ->width(100)
                   ->addClass('text-center'),
-            Column::make('id'),
-            Column::make('add your columns'),
-            Column::make('created_at'),
-            Column::make('updated_at'),
         ];
     }
 

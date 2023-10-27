@@ -15,14 +15,14 @@
                     </a>
                 </div>
             </div>
-            {{-- <div class="card-body">
+            <div class="card-body">
                 {{ $dataTable->table() }}
-            </div> --}}
+            </div>
         </div>
 
     </section>
 @endsection
-{{--
+
 @push('scripts')
     {{ $dataTable->scripts(attributes: ['type' => 'module']) }}
-@endpush --}}
+@endpush

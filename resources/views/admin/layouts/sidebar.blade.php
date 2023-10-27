@@ -91,7 +91,7 @@
 
             {{-- manage ecommerce dropdown --}}
             <li
-                class="dropdown  {{ Request::is('admin/category*') || Request::is('admin/product*') ? 'active' : '' }}">
+                class="dropdown  {{ Request::is('admin/coupon*') || Request::is('admin/product*') ? 'active' : '' }}">
                 <a href="#" class="nav-link has-dropdown" data-toggle="dropdown">
                     <i class="fa fa-columns"></i><span>Manage Ecommerce</span>
                 </a>
