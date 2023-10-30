@@ -23,8 +23,8 @@ class CartController extends Controller
     public function addToCart(Request $request)
     {
         $product = Product::with(['productSizes', 'productOptions'])->findOrFail($request->product_id);
-        if($product->quantity < $request->quantity) {
-            throw ValidationException::withMessages(['Maximum quantity for product: '.$product->name . ' is: '.$product->quantity]);
+        if ($product->quantity < $request->quantity) {
+            throw ValidationException::withMessages(['Maximum quantity for product: ' . $product->name . ' is: ' . $product->quantity]);
         }
         try {
             $productSize = $product->productSizes->where('id', $request->product_size)->first();
@@ -84,7 +84,11 @@ class CartController extends Controller
         try {
             Cart::remove($rowId);
 
-            return response(['status' => 'success', 'message' => 'Item has been removed!'], 200);
+            return response([
+                'status' => 'success', 'message' => 'Item has been removed!',
+                'cart_total' => currencyPosition(cartTotal()),
+                'grandCartTotal' => grandCartTotal(),
+            ], 200);
         } catch (\Exception $e) {
             return response(['status' => 'error', 'message' => 'Sorry , something went wrong!'], 500);
         }
@@ -94,8 +98,8 @@ class CartController extends Controller
     {
         $cartItem = Cart::get($request->rowId);
         $product = Product::findOrFail($cartItem->id);
-        if($product->quantity < $request->qty) {
-            return response(['status' => 'error' , 'message' => 'Quantity is not available!', 'qty'=>$cartItem->qty]);
+        if ($product->quantity < $request->qty) {
+            return response(['status' => 'error', 'message' => 'Quantity is not available!', 'qty' => $cartItem->qty]);
         }
 
         try {
@@ -103,23 +107,34 @@ class CartController extends Controller
             $rowId = $request->input('rowId');
             $qty = $request->input('qty');
 
-           $cart = Cart::update($rowId, $qty);
+            $cart = Cart::update($rowId, $qty);
 
-            return response(['status' => 'success','product_total' => productTotal($rowId) , 'qty' => $cart->qty], 200);
+            return response([
+                'status' => 'success',
+                'product_total' => productTotal($rowId),
+                'qty' => $cart->qty,
+                'cart_total' => currencyPosition(cartTotal()),
+                'grandCartTotal' => grandCartTotal(),
+            ], 200);
         } catch (\Exception $e) {
             logger($e);
             return response(['status' => 'error', 'message' => 'Something went wrong!'], 500);
         }
     }
 
-    public function removeAllProds(){
-        try{
+    public function removeAllProds()
+    {
+        try {
             Cart::destroy();
-            return response(['status'=> 'success', 'message'=> 'All products are removed from cart!'], 200);
-        }catch (\Exception $e) {
+            session()->forget('coupon');
+            return response([
+                'status' => 'success', 'message' => 'All products are removed from cart!',
+                'cart_total' => currencyPosition(cartTotal()),
+                'grandCartTotal' => grandCartTotal(),
+            ], 200);
+        } catch (\Exception $e) {
             logger($e);
-            return response(['status'=> 'error', 'message'=> 'Somethin went wrong!'], 500);
+            return response(['status' => 'error', 'message' => 'Something went wrong!'], 500);
         }
     }
-
 }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Frontend;
 
 use App\Http\Controllers\Controller;
 use App\Models\Category;
+use App\Models\Coupon;
 use App\Models\Product;
 use App\Models\SectionTitle;
 use App\Models\Slider;
@@ -62,6 +63,49 @@ class FrontendController extends Controller
         $code = $request->input('code');
         $subTotal = $request->input('subTotal');
 
-        dd($code, $subTotal);
+        $coupon = Coupon::where('code', $code)->first();
+
+        if (!$coupon) {
+            return response(['message' => 'Invalid Coupon Code'], 422);
+        }
+
+        if ($coupon->quantity <= 0) {
+            return response(['message' => 'Coupon has been fully redeemed'], 422);
+        }
+
+        if ($coupon->expire_date < now()) {
+            return response(['message' => 'Coupon has expired'], 422);
+        }
+
+        if ($coupon->discount_type === 'percent') {
+            $discount = $subTotal * ($coupon->discount / 100);
+            $formattedDiscount = number_format($discount, 2);
+        } elseif ($coupon->discount_type === 'amount') {
+            $discount = $coupon->discount;
+            $formattedDiscount = number_format($discount, 2);
+        }
+
+        $finalTotal = $subTotal - $formattedDiscount;
+        $formattedPrice = number_format($finalTotal, 2);
+        $formattedDiscount = number_format($discount, 2);
+
+        session()->put('coupon', ['code' => $code, 'discount' => $formattedDiscount]);
+
+        return response([
+            'message' => 'Coupon applied successfully!',
+            'discount' => $formattedDiscount, 'finalTotal' => $formattedPrice,
+            'coupon_code' => $code
+        ]);
+    }
+
+    public function destroyCoupon()
+    {
+        try {
+            session()->forget('coupon');
+            return response(['message' => 'Coupon Removed!', 'grandCartTotal' => grandCartTotal()], 200);
+        } catch (\Exception $e) {
+            logger($e);
+            return response(['message' => 'Something went wrong'], 500);
+        }
     }
 }

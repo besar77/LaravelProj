@@ -31,6 +31,8 @@ Route::group(['middleware' => 'auth'], function () {
     Route::put('profile', [ProfileController::class, 'updateProfile'])->name('profile.update');
     Route::put('profile/password', [ProfileController::class, 'updatePassword'])->name('profile.password.update');
     Route::post('profile/avatar', [ProfileController::class, 'updateAvatar'])->name('profile.avatar.update');
+
+    Route::post('address', [DashboardController::class, 'createAddress'])->name('address.store');
 });
 
 //show homepage
@@ -53,6 +55,7 @@ Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
 Route::post('/cart-update-qty', [CartController::class, 'cartQtyUpdate'])->name('cart.quantity-update');
 
 //Coupone routes
-Route::get('/apply-coupon', [FrontendController::class, 'applyCoupon'])->name('apply-coupon');
+Route::post('/apply-coupon', [FrontendController::class, 'applyCoupon'])->name('apply-coupon');
+Route::get('/destroy-coupon', [FrontendController::class, 'destroyCoupon'])->name('destroy-coupon');
 
 require __DIR__ . '/auth.php';
