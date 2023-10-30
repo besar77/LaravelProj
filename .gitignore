@@ -18,4 +18,6 @@ yarn-error.log
 /.idea
 /.vscode
 resources/views/frontend-template/*
+resources/views/admin-template/*
+resources/views/admin-template
 resources/views/frontend-template
