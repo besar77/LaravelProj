@@ -1,4 +1,76 @@
 <script>
+    $('body').on('click', '.delete-item', function(e) {
+        e.preventDefault();
+        let url = $(this).attr('href');
+        console.log(url);
+
+        let classToDelete = $(this).closest('.col-md-6');
+
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+
+                $.ajax({
+                    method: 'DELETE',
+                    url: url,
+                    data: {
+                        _token: "{{ csrf_token() }}"
+                    },
+                    success: function(response) {
+
+                        if (response.status === 'success') {
+
+                            // rowToDelete.remove();
+                            classToDelete.remove();
+
+                            Swal.fire(
+                                'Deleted!',
+                                'Your file has been deleted.',
+                                'success'
+                            )
+                        } else {
+                            Swal.fire(
+                                'Error!',
+                                response
+                                .message, // Display the error message from the server
+                                'error'
+                            );
+                        }
+                    },
+                    error: function(error) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: JSON.parse(error.responseText)
+                                .message,
+                            customClass: {
+                                container: 'my-swal-container',
+                                title: 'my-swal-title',
+                                content: 'my-swal-content',
+                            },
+                            showConfirmButton: false, // Remove the default "OK" button
+                            timer: 3000, // Auto-close the alert after 3 seconds
+
+                        });
+                    }
+                });
+            }
+        })
+    });
+
+
+
+
+
+
+
     function loadProductModal(productId) {
 
         $.ajax({

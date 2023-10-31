@@ -30,6 +30,38 @@ class DashboardController extends Controller
         $address->type = $request->type;
         $address->save();
         toastr()->success('Created Successfully');
+        return redirect()->back();
+    }
+    public function updateAddress(string $id, AddressCreateRequest $request)
+    {
+        // dd($request->all());
+
+        $address = Address::findOrFail($id);
+        $address->user_id = auth()->user()->id;
+        $address->delivery_area_id = $request->delivery_area_id;
+        $address->firstName = $request->firstName;
+        $address->lastName = $request->lastName;
+        $address->email = $request->email;
+        $address->phone = $request->phone;
+        $address->address = $request->address;
+        $address->type = $request->type;
+        $address->save();
+        toastr()->success('Updated Successfully');
         return to_route('dashboard');
+    }
+
+    public function deleteAddress(string $id)
+    {
+        try {
+            $address = Address::findOrFail($id);
+            if ($address && $address->user_id === auth()->user()->id) {
+                $address->delete();
+                return response()->json(['status' => 'success', 'message' => 'Address deleted successfully']);
+            }
+            return response()->json(['status' => 'error', 'message' => 'Something went wrong!'], 404);
+        } catch (\Exception $e) {
+            logger($e);
+            return response()->json(['status' => 'error', 'message' => 'Something went wrong!'], 404);
+        }
     }
 }
