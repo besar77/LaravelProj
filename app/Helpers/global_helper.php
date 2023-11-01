@@ -92,20 +92,34 @@ if (!function_exists('productTotal')) {
 //grand cart total
 if (!function_exists('grandCartTotal')) {
 
-    function grandCartTotal()
+    function grandCartTotal($deliveryFee = 0)
     {
         $total = 0;
         $cartTotal = cartTotal();
         if (session()->has('coupon')) {
             $discount = session()->get('coupon')['discount'];
-            $total = $cartTotal - $discount;
+            $total = ($cartTotal + $deliveryFee) - $discount;
             if ($cartTotal == 0) {
                 $total = 0;
             }
             return $total;
         } else {
-            $total = $cartTotal;
+            $total = $cartTotal + $deliveryFee;
             return $total;
         }
+    }
+}
+
+
+//generate invoice id
+if (!function_exists('generateInvoiceId')) {
+
+    function generateInvoiceId()
+    {
+        $randomNumber = rand(1, 9999);
+        $currentDateTime = now();
+
+        $invoiceId = $randomNumber . $currentDateTime->format('yd') . $currentDateTime->format('s');
+        return $invoiceId;
     }
 }

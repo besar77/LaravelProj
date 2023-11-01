@@ -84,6 +84,10 @@ class CartController extends Controller
         try {
             Cart::remove($rowId);
 
+            if (count(Cart::content()) === 0) {
+                session()->forget(['delivery_fee', 'address', 'coupon']);
+            }
+
             return response([
                 'status' => 'success', 'message' => 'Item has been removed!',
                 'cart_total' => currencyPosition(cartTotal()),

@@ -91,7 +91,7 @@
 
             {{-- manage ecommerce dropdown --}}
             <li
-                class="dropdown  {{ Request::is('admin/coupon*') || Request::is('admin/delivery-area*') ? 'active' : '' }}">
+                class="dropdown  {{ Request::is('admin/coupon*') || Request::is('admin/delivery-area*') || Request::is('admin/payment-gateway*') ? 'active' : '' }}">
                 <a href="#" class="nav-link has-dropdown" data-toggle="dropdown">
                     <i class="fa fa-columns"></i><span>Manage Ecommerce</span>
                 </a>
@@ -101,6 +101,9 @@
                     </li>
                     <li class="{{ Request::is('admin/delivery-area*') ? 'active' : '' }}">
                         <a href="{{ route('admin.delivery-area.index') }}" class="nav-link">Delivery Areas</a>
+                    </li>
+                    <li class="{{ Request::is('admin/payment-gateway*') ? 'active' : '' }}">
+                        <a href="{{ route('admin.payment-setting.index') }}" class="nav-link">Payment Gateways</a>
                     </li>
                 </ul>
             </li>

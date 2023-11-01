@@ -1,8 +1,8 @@
 @extends('frontend.layouts.master')
 @section('content')
     <!--=============================
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                    BREADCRUMB START
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                ==============================-->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        BREADCRUMB START
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    ==============================-->
     <section class="fp__breadcrumb" style="background: url({{ asset('frontend/images/counter_bg.jpg') }});">
         <div class="fp__breadcrumb_overlay">
             <div class="container">
@@ -17,13 +17,13 @@
         </div>
     </section>
     <!--=============================
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                    BREADCRUMB END
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                ==============================-->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        BREADCRUMB END
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    ==============================-->
 
 
     <!--============================
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                    CHECK OUT PAGE START
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                ==============================-->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        CHECK OUT PAGE START
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    ==============================-->
     <section class="fp__cart_view mt_125 xs_mt_95 mb_100 xs_mb_70">
         <div class="container">
             <div class="row">
@@ -178,15 +178,15 @@
                         @endif
                         <p class="total"><span>total:</span> <span
                                 id="grand_total">{{ currencyPosition(grandCartTotal()) }}</span></p>
-                        <a class="common_btn" href=" #">checkout</a>
+                        <a class="common_btn" id="proceed_pmt_button" href="#">Proceed to payment</a>
                     </div>
                 </div>
             </div>
         </div>
     </section>
     <!--============================
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                    CHECK OUT PAGE END
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                ==============================-->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        CHECK OUT PAGE END
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    ==============================-->
 @endsection
 
 @push('scripts')
@@ -224,6 +224,41 @@
                     },
                 })
             });
+
+
+            $('#proceed_pmt_button').on('click', function(e) {
+
+                e.preventDefault();
+                let address = $('.v_address:checked');
+                let id = address.val();
+
+
+                if (address.length === 0) {
+                    toastr.error('Please select a Address!');
+                    return;
+                }
+
+                $.ajax({
+                    method: 'POST',
+                    url: '{{ route('checkout.redirect') }}',
+                    data: {
+                        id: id
+                    },
+                    beforeSend: function() {
+                        showLoader();
+                    },
+                    success: function(response) {
+                        window.location.href = response.redirect_url;
+                    },
+                    error: function(xhr, status, error) {
+                        // let errMsg = xhr.responseJSON.message;
+                        // toastr.error(errMsg);
+                    },
+                    complete: function() {
+                        hideLoader();
+                    },
+                })
+            })
         });
     </script>
 @endpush

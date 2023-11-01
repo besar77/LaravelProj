@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\AdminAuthController;
+use App\Http\Controllers\Frontend\PaymentController;
 use App\Http\Controllers\Frontend\CheckoutController;
 use App\Http\Controllers\Frontend\CartController;
 use App\Http\Controllers\Frontend\FrontendController;
@@ -64,6 +65,16 @@ Route::get('/destroy-coupon', [FrontendController::class, 'destroyCoupon'])->nam
 Route::group(['middleware' => 'auth'], function () {
     Route::get('checkout', [CheckoutController::class, 'index'])->name('checkout.index');
     Route::get('checkout/delivery-calc', [CheckoutController::class, 'deliveryCalc'])->name('checkout.delivery-calc');
+
+    Route::post('checkout', [CheckoutController::class, 'checkoutRedirect'])->name('checkout.redirect');
+
+    //Payment routes
+    Route::get('payment', [PaymentController::class, 'index'])->name('payment.index');
+    Route::POST('make-payment', [PaymentController::class, 'makePayment'])->name('make-payment');
+
+    Route::get('paypal/payment', [PaymentController::class, 'payWithPaypal'])->name('paypal.payment');
+    Route::get('paypal/success', [PaymentController::class, 'paypalSuccess'])->name('paypal.success');
+    Route::get('paypal/cancel', [PaymentController::class, 'paypalCancel'])->name('paypal.cancel');
 });
 
 require __DIR__ . '/auth.php';

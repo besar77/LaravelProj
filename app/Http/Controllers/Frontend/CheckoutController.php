@@ -22,11 +22,7 @@ class CheckoutController extends Controller
             $addressId = $request->input('addressId');
             $address = Address::findOrFail($addressId);
             $deliveryAmount = $address->deliveryArea->delivery_fee;
-            $grandTotal = grandCartTotal();
-
-            if ($deliveryAmount) {
-                $grandTotal = $grandTotal + $deliveryAmount;
-            }
+            $grandTotal = grandCartTotal($deliveryAmount);
 
             $formattedGrandTotal = number_format($grandTotal, 2, '.', ',');
             $formatteddeliveryAmount = number_format($deliveryAmount, 2, '.', ',');
@@ -36,5 +32,22 @@ class CheckoutController extends Controller
             logger($e);
             return response()->json(['status' => 'error', 'message' => 'Something went wrong']);
         }
+    }
+
+    public function checkoutRedirect(Request $request)
+    {
+        $request->validate([
+            'id' => 'required|integer'
+        ]);
+
+        $address = Address::with('deliveryArea')->findOrFail($request->input('id'));
+
+        $selectedAddress = $address->address . ', Area: ' . $address->deliveryArea?->area_name;
+
+        session()->put('address', $selectedAddress);
+        session()->put('delivery_fee', $address->deliveryArea->delivery_fee);
+
+
+        return response(['redirect_url' => route('payment.index')]);
     }
 }
