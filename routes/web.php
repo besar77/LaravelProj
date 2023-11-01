@@ -75,6 +75,10 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('paypal/payment', [PaymentController::class, 'payWithPaypal'])->name('paypal.payment');
     Route::get('paypal/success', [PaymentController::class, 'paypalSuccess'])->name('paypal.success');
     Route::get('paypal/cancel', [PaymentController::class, 'paypalCancel'])->name('paypal.cancel');
+
+    // Route::get('test', function () {
+    //     return view('mail.order-placed-mail');
+    // });
 });
 
 require __DIR__ . '/auth.php';
