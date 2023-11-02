@@ -74,6 +74,33 @@
                 </a>
             </li>
 
+
+            <li
+                class="dropdown  {{ Request::is('admin/order*') || Request::is('admin/pending*') || Request::is('admin/in-process*') || Request::is('admin/delivered*') || Request::is('admin/declined*')? 'active' : '' }}">
+                <a href="#" class="nav-link has-dropdown" data-toggle="dropdown">
+                    <i class="fa fa-columns"></i><span>Orders</span>
+                </a>
+                <ul class="dropdown-menu">
+                    <li class="{{ Request::is('admin/order*') ? 'active' : '' }}">
+                        <a href="{{ route('admin.order.index') }}" class="nav-link">All Orders</a>
+                    </li>
+                    <li class="{{ Request::is('admin/pending*') ? 'active' : '' }}">
+                        <a href="{{ route('admin.pending-orders') }}" class="nav-link">Pending Orders</a>
+                    </li>
+                    <li class="{{ Request::is('admin/in-process*') ? 'active' : '' }}">
+                        <a href="{{ route('admin.in-process-orders') }}" class="nav-link">In Process Orders</a>
+                    </li>
+                    <li class="{{ Request::is('admin/declined*') ? 'active' : '' }}">
+                        <a href="{{ route('admin.declined-orders') }}" class="nav-link">Declined Orders</a>
+                    </li>
+                    <li class="{{ Request::is('admin/delivered*') ? 'active' : '' }}">
+                        <a href="{{ route('admin.delivered-orders') }}" class="nav-link">Delivered Orders</a>
+                    </li>
+
+                </ul>
+            </li>
+
+
             <li
                 class="dropdown  {{ Request::is('admin/category*') || Request::is('admin/product*') ? 'active' : '' }}">
                 <a href="#" class="nav-link has-dropdown" data-toggle="dropdown">

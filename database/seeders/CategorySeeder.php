@@ -11,6 +11,7 @@ class CategorySeeder extends Seeder
     /**
      * Run the database seeds.
      */
+    //test
     public function run(): void
     {
         Category::insert([

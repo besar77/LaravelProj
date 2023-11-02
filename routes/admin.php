@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\CouponController;
 use App\Http\Controllers\Admin\DeliveryAreaController;
+use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\PaymentGatewaySettingController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\ProductGalleryController;
@@ -58,12 +59,24 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
     //Delivery Areas Routes
     Route::resource('delivery-area', DeliveryAreaController::class);
 
+    //Order Routes
+    Route::get('orders', [OrderController::class, 'index'])->name('order.index');
+    Route::get('orders/{id}', [OrderController::class, 'show'])->name('orders.show');
+    Route::delete('orders/destroy/{id}', [OrderController::class, 'destroy'])->name('orders.destroy');
+
+    Route::get('pending-orders', [OrderController::class, 'pendingOrdersIndex'])->name('pending-orders');
+    Route::get('in-process-orders', [OrderController::class, 'inProcessOrdersIndex'])->name('in-process-orders');
+    Route::get('declined-orders', [OrderController::class, 'declinedOrdersIndex'])->name('declined-orders');
+    Route::get('delivered-orders', [OrderController::class, 'deliveredOrdersIndex'])->name('delivered-orders');
+
+    Route::get('order/status-update/{id}', [OrderController::class, 'getOrderStatus'])->name('orders.status');
+    Route::put('order/status-update/{id}', [OrderController::class, 'orderStatusUpdate'])->name('orders.status-update');
+
+
     //Payment Gateway Settings
     Route::get('/payment-gateway-settings', [PaymentGatewaySettingController::class, 'index'])->name('payment-setting.index');
     Route::put('/paypal-setting', [PaymentGatewaySettingController::class, 'paypalSettingUpdate'])->name('paypal-setting.update');
     Route::put('/stripe-setting', [PaymentGatewaySettingController::class, 'stripeSettingUpdate'])->name('stripe-setting.update');
-
-
 
     //Settings
     Route::get('/setting', [SettingController::class, 'index'])->name('setting.index');

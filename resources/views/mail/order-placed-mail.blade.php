@@ -260,8 +260,9 @@
                                                     <td align="left" valign="top"
                                                         style="font-family: Open Sans, Helvetica, Arial, sans-serif; font-size: 16px; font-weight: 400; line-height: 24px; text-align:center;">
                                                         <p style="font-weight: 800;">Estimated Delivery Date</p>
-                                                        <p>Min: {{ @$order->deliveryArea->min_delivery_time }}m , Max:
-                                                            {{ @$order->deliveryArea->max_delivery_time }}m</p>
+                                                        <p>Min: {{ @$order->address->deliveryArea->min_delivery_time }}m
+                                                            , Max:
+                                                            {{ @$order->address->deliveryArea->max_delivery_time }}m</p>
                                                     </td>
                                                 </tr>
                                             </table>
