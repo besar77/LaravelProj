@@ -9,6 +9,8 @@ use App\Services\OrderService;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 use Srmklive\PayPal\Services\PayPal as PayPalClient;
+use Stripe\Stripe;
+use Stripe\Checkout\Session as StripeSession;
 
 class PaymentController extends Controller
 {
@@ -29,7 +31,7 @@ class PaymentController extends Controller
     public function makePayment(Request $request, OrderService $orderService)
     {
         $request->validate([
-            'paymentGateway' => 'required|string|in:paypal'
+            'paymentGateway' => 'required|string|in:paypal,stripe'
         ]);
 
         //Create order
@@ -40,10 +42,23 @@ class PaymentController extends Controller
                     return response(['redirect_url' => route('paypal.payment')]);
                     break;
 
+                case 'stripe':
+                    return response(['redirect_url' => route('stripe.payment')]);
+                    break;
+
                 default:
                     break;
             }
         }
+    }
+
+    public function paymentSuccess()
+    {
+        return view('frontend.pages.payment-success');
+    }
+    public function paymentCancel()
+    {
+        return view('frontend.pages.payment-cancel');
     }
 
     // Paypal payment
@@ -60,7 +75,7 @@ class PaymentController extends Controller
             'live' => [
                 'client_id'         => config('gatewaySettings.paypal_api_key'),
                 'client_secret'     => config('gatewaySettings.paypal_secret_key'),
-                'app_id'            => env('PAYPAL_LIVE_APP_ID', ''),
+                'app_id'            => config('gatewaySettings.paypal_app_id'),
             ],
 
             'payment_action' => 'Sale', // Can only be 'Sale', 'Authorization' or 'Order'
@@ -107,9 +122,10 @@ class PaymentController extends Controller
                 }
             }
         } else {
+            return redirect()->route('payment.cancel')->withErrors(['error' => $response['error']['message']]);
         }
     }
-    public function paypalSuccess(Request $request)
+    public function paypalSuccess(Request $request, OrderService $orderService)
     {
         $config = $this->setPaypalConfig();
         $provider = new PayPalClient($config);
@@ -125,12 +141,100 @@ class PaymentController extends Controller
                 'currency' => $capture['amount']['currency_code'],
                 'status' => $capture['status']
             ];
-            OrderPaymentUpdateEvent::dispatch($orderId, $paymentInfo, 'paypal');
+            OrderPaymentUpdateEvent::dispatch($orderId, $paymentInfo, 'PayPal');
             OrderPlacedNotificationEvent::dispatch($orderId);
-            dd('success');
+
+            //Clear session data
+            $orderService->clearSession();
+
+            return redirect()->route('payment.success');
+        } else {
+            $this->transactionFailedUpdateStatus('PayPal');
+            return redirect()->route('payment.cancel')->withErrors(['error' => $response['error']['message']]);
         }
     }
     public function paypalCancel()
     {
+        $this->transactionFailedUpdateStatus('PayPal');
+        return redirect()->route('payment.cancel');
+    }
+
+    //Stripe payment
+    public function payWithStripe()
+    {
+        Stripe::setApiKey(config('gatewaySettings.stripe_secret_key'));
+
+        //calc payable amount
+        $grandTotal = session()->get('grand_total');
+        $payableAmount = round($grandTotal * config('gatewaySettings.stripe_rate')) * 100; //stripe po pranon si qmim vetem centat , per qato e shumzojm me 100
+
+        $response = StripeSession::create([
+            'line_items' => [
+                [
+                    'price_data' => [
+                        'currency' => config('gatewaySettings.stripe_currency'),
+                        'product_data' => [
+                            'name' => 'Product'
+                        ],
+                        'unit_amount' => $payableAmount
+                    ],
+                    'quantity' => 1
+                ]
+            ],
+            'mode' => 'payment',
+            'success_url' => route('stripe.success') . '?session_id={CHECKOUT_SESSION_ID}',
+            'cancel_url' => route('stripe.cancel')
+        ]);
+
+        return redirect()->away($response->url);
+    }
+
+    public function stripeSuccess(Request $request, OrderService $orderService)
+    {
+        $sessionId = $request->session_id;
+        Stripe::setApiKey(config('gatewaySettings.stripe_secret_key'));
+
+        $response = StripeSession::retrieve($sessionId);
+
+        // dd($response);
+
+        if ($response->payment_status === 'paid') {
+
+            $orderId = session()->get('order_id');
+            $paymentInfo = [
+                'transaction_id' => $response->payment_intent,
+                'currency' => $response->currency,
+                'status' => $response->status
+            ];
+            OrderPaymentUpdateEvent::dispatch($orderId, $paymentInfo, 'Stripe');
+            OrderPlacedNotificationEvent::dispatch($orderId);
+
+            //Clear session data
+            $orderService->clearSession();
+
+            return redirect()->route('payment.success');
+        } else {
+            $this->transactionFailedUpdateStatus('Stripe');
+            return redirect()->route('payment.cancel');
+        }
+
+        // return 'success';
+    }
+    public function stripeCancel()
+    {
+        $this->transactionFailedUpdateStatus('Stripe');
+        return redirect()->route('payment.cancel');
+    }
+
+    public function transactionFailedUpdateStatus($gatewayName)
+    {
+
+        $orderId = session()->get('order_id');
+        $paymentInfo = [
+            'transaction_id' => '',
+            'currency' => '',
+            'status' => 'Failed'
+        ];
+        OrderPaymentUpdateEvent::dispatch($orderId, $paymentInfo, $gatewayName);
     }
 }

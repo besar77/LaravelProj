@@ -61,5 +61,12 @@ class OrderService
     //Clear Session items
     public function clearSession()
     {
+        \Cart::destroy();
+        session()->forget('coupon');
+        session()->forget('address');
+        session()->forget('delivery_fee');
+        session()->forget('delivery_area_id');
+        session()->forget('order_id');
+        session()->forget('grand_total');
     }
 }

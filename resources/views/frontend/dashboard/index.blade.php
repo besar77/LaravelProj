@@ -2,8 +2,8 @@
 
 @section('content')
     <!--=============================
-                                                                                                                                                                                                                                                                                                                    BREADCRUMB START
-                                                                                                                                                                                                                                                                                                                ==============================-->
+                                                                                                                                                                                                                                                                                                                            BREADCRUMB START
+                                                                                                                                                                                                                                                                                                                        ==============================-->
     <section class="fp__breadcrumb" style="background: url({{ asset('frontend/images/counter_bg.jpg') }});">
         <div class="fp__breadcrumb_overlay">
             <div class="container">
@@ -18,13 +18,13 @@
         </div>
     </section>
     <!--=============================
-                                                                                                                                                                                                                                                                                                                    BREADCRUMB END
-                                                                                                                                                                                                                                                                                                                ==============================-->
+                                                                                                                                                                                                                                                                                                                            BREADCRUMB END
+                                                                                                                                                                                                                                                                                                                        ==============================-->
 
 
     <!--=========================
-                                                                                                                                                                                                                                                                                                                    DASHBOARD START
-                                                                                                                                                                                                                                                                                                                ==========================-->
+                                                                                                                                                                                                                                                                                                                            DASHBOARD START
+                                                                                                                                                                                                                                                                                                                        ==========================-->
     <section class="fp__dashboard mt_120 xs_mt_90 mb_100 xs_mb_70">
         <div class="container">
             <div class="fp__dashboard_area">
@@ -79,7 +79,7 @@
 
                                 <form method="POST" action="{{ route('logout') }}">
                                     @csrf
-                                    <button
+                                    <button style="width: 100%"
                                         onclick="event.preventDefault();
                                         this.closest('form').submit();"
                                         class="nav-link" type="button"><span> <i class="fas fa-sign-out-alt"></i>
@@ -101,12 +101,6 @@
                                 @include('frontend.dashboard.sections.order-section')
                                 @include('frontend.dashboard.sections.wishlist-section')
                                 @include('frontend.dashboard.sections.reviews-section')
-
-
-
-
-
-
                                 @include('frontend.dashboard.chanepassword')
 
                             </div>
@@ -203,8 +197,8 @@
     </div>
     <!-- CART POPUT END -->
     <!--=========================
-                                                                                                                                                                                                                                                                                                                    DASHBOARD END
-                                                                                                                                                                                                                                                                                                                ==========================-->
+                                                                                                                                                                                                                                                                                                                            DASHBOARD END
+                                                                                                                                                                                                                                                                                                                        ==========================-->
 @endsection
 
 

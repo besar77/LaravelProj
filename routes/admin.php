@@ -61,6 +61,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
     //Payment Gateway Settings
     Route::get('/payment-gateway-settings', [PaymentGatewaySettingController::class, 'index'])->name('payment-setting.index');
     Route::put('/paypal-setting', [PaymentGatewaySettingController::class, 'paypalSettingUpdate'])->name('paypal-setting.update');
+    Route::put('/stripe-setting', [PaymentGatewaySettingController::class, 'stripeSettingUpdate'])->name('stripe-setting.update');
 
 
 

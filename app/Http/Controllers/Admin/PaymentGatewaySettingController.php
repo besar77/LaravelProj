@@ -32,6 +32,7 @@ class PaymentGatewaySettingController extends Controller
             'paypal_rate' => 'required|numeric',
             'paypal_api_key' => 'required',
             'paypal_secret_key' => 'required',
+            'paypal_app_id' => 'required',
         ]);
 
         // dd('Para pikes');
@@ -46,6 +47,49 @@ class PaymentGatewaySettingController extends Controller
 
             PaymentGatewaySetting::updateOrCreate(
                 ['key' => 'paypal_logo'],
+                ['value' => $imagePath]
+            );
+        }
+
+
+        foreach ($validatedData as $key => $value) {
+            PaymentGatewaySetting::updateOrCreate(
+                ['key' => $key],
+                ['value' => $value]
+            );
+        }
+
+        $settingsService = app(PaymentGatewaySettingService::class);
+        $settingsService->clearCachedSettings();
+
+        toastr()->success('Updated Successfully');
+        return redirect()->back();
+    }
+
+    public function stripeSettingUpdate(Request $request)
+    {
+        // dd($request->all());
+        $validatedData = $request->validate([
+            'stripe_status' => 'required|boolean',
+            'stripe_country' => 'required',
+            'stripe_currency' => 'required',
+            'stripe_rate' => 'required|numeric',
+            'stripe_api_key' => 'required',
+            'stripe_secret_key' => 'required',
+        ]);
+
+        // dd('Para pikes');
+
+        if ($request->hasFile('stripe_logo')) {
+            // dd('A jemi ne pike');
+            $request->validate([
+                'stripe_logo' => 'nullable|image'
+            ]);
+
+            $imagePath = $this->uploadImage($request, 'stripe_logo');
+
+            PaymentGatewaySetting::updateOrCreate(
+                ['key' => 'stripe_logo'],
                 ['value' => $imagePath]
             );
         }
