@@ -1,5 +1,6 @@
 <?php
 
+use App\Events\RTOrderplacedNotificationEvent;
 use App\Http\Controllers\Admin\AdminAuthController;
 use App\Http\Controllers\Frontend\PaymentController;
 use App\Http\Controllers\Frontend\CheckoutController;
@@ -89,6 +90,11 @@ Route::group(['middleware' => 'auth'], function () {
     // Route::get('test', function () {
     //     return view('mail.order-placed-mail');
     // });
+
+    Route::get('test',function(){
+        // dd(config('broadcasting'));
+        RTOrderplacedNotificationEvent::dispatch("hello there");
+    });
 });
 
 require __DIR__ . '/auth.php';

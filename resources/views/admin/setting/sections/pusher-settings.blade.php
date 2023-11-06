@@ -1,12 +1,27 @@
 <div class="tab-pane fade" id="pusher-setting" role="tabpanel" aria-labelledby="profile-tab4">
     <div class="card-body border">
-        <form action="{{ route('admin.general-setting.update') }}" method="POST">
+        <form action="{{ route('admin.pusher-setting.update') }}" method="POST">
             @csrf
             @method('PUT')
             <div class="form-group">
-                <label for="">Site Name</label>
-                <input type="text" class="form-control" name="site_name"
-                    value="{{ config('settings.site_name') }}">
+                <label for="">Pusher App Id</label>
+                <input type="text" class="form-control" name="pusher_app_id"
+                    value="{{ config('settings.pusher_app_id') }}">
+            </div>
+            <div class="form-group">
+                <label for="">Pusher Key</label>
+                <input type="text" class="form-control" name="pusher_key"
+                    value="{{ config('settings.pusher_key') }}">
+            </div>
+            <div class="form-group">
+                <label for="">Pusher Secret</label>
+                <input type="text" class="form-control" name="pusher_secret"
+                    value="{{ config('settings.pusher_secret') }}">
+            </div>
+            <div class="form-group">
+                <label for="">Pusher Cluster</label>
+                <input type="text" class="form-control" name="pusher_cluster"
+                    value="{{ config('settings.pusher_cluster') }}">
             </div>
 
             <button type="submit" class="btn btn-primary">Save</button>
