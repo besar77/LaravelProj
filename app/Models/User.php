@@ -42,4 +42,10 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    public function chats()
+    {
+        return $this->hasMany(Chat::class, 'sender_id', 'id')
+            ->orWhere('receiver_id', $this->id);
+    }
 }

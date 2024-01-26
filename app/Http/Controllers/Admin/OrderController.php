@@ -9,6 +9,7 @@ use App\DataTables\OrderDataTable;
 use App\DataTables\PendingOrderDataTable;
 use App\Http\Controllers\Controller;
 use App\Models\Order;
+use App\Models\OrderPlacedNotification;
 use Illuminate\Http\Request;
 
 class OrderController extends Controller
@@ -37,6 +38,7 @@ class OrderController extends Controller
     public function show(string $id)
     {
         $order = Order::findOrFail($id);
+        $notification = OrderPlacedNotification::where('order_id', $order->id)->update(['seen' => 1]);
         return view('admin.order.show', compact('order'));
     }
 
@@ -56,21 +58,22 @@ class OrderController extends Controller
         $order->order_status = $request->order_status;
         $order->save();
 
-        if($request->ajax()){
+        if ($request->ajax()) {
             return response()->json(['message' => 'Order Status Was Updated Successfully']);
-        }else{
+        } else {
             toastr()->success('Status updated successfully');
             return redirect()->back();
         }
-
     }
 
-    public function getOrderStatus(string $id , Request $request){
-        $order = Order::select(['payment_status','order_status'])->findOrFail($id);
+    public function getOrderStatus(string $id, Request $request)
+    {
+        $order = Order::select(['payment_status', 'order_status'])->findOrFail($id);
         return response()->json($order);
     }
 
-    public function destroy(string $id){
+    public function destroy(string $id)
+    {
         try {
             $order = Order::findOrFail($id);
             // dd($whyChoseUs);

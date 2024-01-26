@@ -23,7 +23,7 @@ window.Pusher = Pusher;
 window.Echo = new Echo({
     broadcaster: 'pusher',
     key: pusherKey,
-    cluster: pusherCluster,
+    cluster: pusherCluster ?? "mt1",
     wsHost: import.meta.env.VITE_PUSHER_HOST ? import.meta.env.VITE_PUSHER_HOST : `ws-${import.meta.env.VITE_PUSHER_APP_CLUSTER}.pusher.com`,
     wsPort: import.meta.env.VITE_PUSHER_PORT ?? 80,
     wssPort: import.meta.env.VITE_PUSHER_PORT ?? 443,
@@ -36,4 +36,20 @@ window.Echo = new Echo({
 window.Echo.channel('order-placed')
 .listen('RTOrderplacedNotificationEvent' , (e) => {
     console.log(e);
+    var html = `
+    <a href="/admin/orders/${e.order_id}" class="dropdown-item">
+        <div class="dropdown-item-icon bg-info text-white">
+            <i class="fas fa-bell"></i>
+        </div>
+        <div class="dropdown-item-desc">
+        ${e.message}
+            <div class="time">${e.date}</div>
+        </div>
+    </a>
+    `;
+    $('.rt_notification').prepend(html);
+    $('.notification_beep').addClass('beep');
+
 });
+
+

@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\AdminAuthController;
 use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\ChatController;
 use App\Http\Controllers\Admin\CouponController;
 use App\Http\Controllers\Admin\DeliveryAreaController;
 use App\Http\Controllers\Admin\OrderController;
@@ -15,6 +16,7 @@ use App\Http\Controllers\Admin\ProfileController;
 use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\SliderController;
 use App\Http\Controllers\Admin\WhyChooseUsController;
+use App\Http\Controllers\Frontend\DashboardController;
 use Illuminate\Support\Facades\Route;
 
 Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
@@ -77,6 +79,16 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
     Route::get('/payment-gateway-settings', [PaymentGatewaySettingController::class, 'index'])->name('payment-setting.index');
     Route::put('/paypal-setting', [PaymentGatewaySettingController::class, 'paypalSettingUpdate'])->name('paypal-setting.update');
     Route::put('/stripe-setting', [PaymentGatewaySettingController::class, 'stripeSettingUpdate'])->name('stripe-setting.update');
+
+    //Notification Routes
+    Route::get('clear-notification', [AdminDashboardController::class, 'clearNotification'])->name('clear-notification');
+
+
+
+    //Messages Routes
+    Route::get('chat', [ChatController::class, 'index'])->name('chat-index');
+    Route::get('chat/get-conversation/{senderId}', [ChatController::class, 'getConversation'])->name('chat.get-conversation');
+    Route::post('chat/send-message', [ChatController::class, 'sendMessage'])->name('chat.send-message');
 
     //Settings
     Route::get('/setting', [SettingController::class, 'index'])->name('setting.index');

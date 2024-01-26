@@ -2,12 +2,15 @@
 
 use App\Events\RTOrderplacedNotificationEvent;
 use App\Http\Controllers\Admin\AdminAuthController;
+
 use App\Http\Controllers\Frontend\PaymentController;
 use App\Http\Controllers\Frontend\CheckoutController;
 use App\Http\Controllers\Frontend\CartController;
+use App\Http\Controllers\Frontend\ChatController;
 use App\Http\Controllers\Frontend\FrontendController;
 use App\Http\Controllers\Frontend\DashboardController;
 use App\Http\Controllers\Frontend\ProfileController;
+use App\Models\Order;
 use Illuminate\Support\Facades\Route;
 
 
@@ -38,6 +41,10 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('address', [DashboardController::class, 'createAddress'])->name('address.store');
     Route::put('address/{id}/edit', [DashboardController::class, 'updateAddress'])->name('address.update');
     Route::delete('address/{id}/delete', [DashboardController::class, 'deleteAddress'])->name('address.destroy');
+
+    //CHAT ROUTES
+    Route::post('chat/send-message', [ChatController::class, 'sendMessage'])->name('chat.send-message');
+    Route::get('chat/get-conversation/{senderId}', [ChatController::class, 'getConversation'])->name('chat.get-conversation');
 });
 
 //show homepage
@@ -85,16 +92,6 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('stripe/payment', [PaymentController::class, 'payWithStripe'])->name('stripe.payment');
     Route::get('stripe/success', [PaymentController::class, 'stripeSuccess'])->name('stripe.success');
     Route::get('stripe/cancel', [PaymentController::class, 'stripeCancel'])->name('stripe.cancel');
-
-
-    // Route::get('test', function () {
-    //     return view('mail.order-placed-mail');
-    // });
-
-    Route::get('test',function(){
-        // dd(config('broadcasting'));
-        RTOrderplacedNotificationEvent::dispatch("hello there");
-    });
 });
 
 require __DIR__ . '/auth.php';

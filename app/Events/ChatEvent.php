@@ -2,7 +2,6 @@
 
 namespace App\Events;
 
-use App\Models\Order;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PresenceChannel;
@@ -11,24 +10,25 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class RTOrderplacedNotificationEvent implements ShouldBroadcast
+class ChatEvent implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     public $message;
-    public $order_id;
-    public $date;
+    public $avatar;
+    public $receiverId;
+    public $senderId;
+
     /**
      * Create a new event instance.
      */
-    public function __construct(Order $order)
+    public function __construct($message, $avatar, $receiverId, $senderId)
     {
-        $this->message = '#' . $order->invoice_id . ' a new order has placed!';
-        $this->order_id = $order->id;
-        $this->date = date('h:i A | d-F-Y', strtotime($order->created_at));
+        $this->message = $message;
+        $this->avatar = $avatar;
+        $this->receiverId = $receiverId;
+        $this->senderId = $senderId;
     }
-
-
 
     /**
      * Get the channels the event should broadcast on.
@@ -38,7 +38,7 @@ class RTOrderplacedNotificationEvent implements ShouldBroadcast
     public function broadcastOn(): array
     {
         return [
-            new Channel('order-placed'),
+            new PrivateChannel('chat.' . $this->receiverId),
         ];
     }
 }
