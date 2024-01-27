@@ -63,9 +63,28 @@
                             id="cart_count_span_id">{{ count(Cart::content()) }}</span></a>
                 </li>
 
-                <li>
-                    <a class="cart_icon message_icon"><i class="fas fa-comment-alt-dots"></i> <span>7</span></a>
-                </li>
+
+                @php
+                    // Check if the user is logged in and has an ID
+                    if (auth()->check() && auth()->user()->id) {
+                        $unseenMessages = \App\Models\Chat::where([
+                            'sender_id' => 1,
+                            'receiver_id' => auth()->user()->id,
+                            'seen' => 0,
+                        ])->count();
+                    }
+                @endphp
+
+                @if (isset($unseenMessages))
+                    <li>
+                        <a class="message_icon" href="{{ route('dashboard') }}"><i class="fas fa-comment-alt-dots"></i>
+                            <span class="unseen-message-count">
+                                {{ $unseenMessages }}
+                            </span>
+                        </a>
+                    </li>
+                @endif
+
 
                 <li>
                     <a href="{{ route('login') }}"><i class="fas fa-user"></i></a>

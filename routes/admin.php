@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\ChatController;
 use App\Http\Controllers\Admin\CouponController;
+use App\Http\Controllers\Admin\DailyOfferController;
 use App\Http\Controllers\Admin\DeliveryAreaController;
 use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\PaymentGatewaySettingController;
@@ -94,4 +95,9 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
     Route::get('/setting', [SettingController::class, 'index'])->name('setting.index');
     Route::put('/general-setting', [SettingController::class, 'UpdateGeneralSetting'])->name('general-setting.update');
     Route::put('/pusher-setting', [SettingController::class, 'updatePusherSetting'])->name('pusher-setting.update');
+
+
+    //Daily Offer Routes
+    Route::get('dailyOffer/search-product',[DailyOfferController::class,'prodSearch'])->name('dailyOffer.searchProduct');
+    Route::resource('dailyOffers',DailyOfferController::class);
 });

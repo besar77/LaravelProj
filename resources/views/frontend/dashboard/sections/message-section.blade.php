@@ -4,31 +4,11 @@
             <h3>Message</h3>
             <div class="fp__chat_area">
                 <div class="fp__chat_body">
-                    {{-- <div class="fp__chating">
-                        <div class="fp__chating_img">
-                            <img src="images/service_provider.png" alt="person" class="img-fluid w-100">
-                        </div>
-                        <div class="fp__chating_text">
-                            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                            </p>
-                            <span>15 Jun, 2023, 05:26 AM</span>
-                        </div>
-                    </div>
-                    <div class="fp__chating tf_chat_right">
-                        <div class="fp__chating_img">
-                            <img src="images/client_img_1.jpg" alt="person" class="img-fluid w-100">
-                        </div>
-                        <div class="fp__chating_text">
-                            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                            </p>
-                            <span>15 Jun, 2023, 05:26 AM</span>
-                        </div>
-                    </div> --}}
                 </div>
                 <form class="fp__single_chat_bottom chat_input">
                     @csrf
-                    <label for="select_file"><i class="far fa-file-medical" aria-hidden="true"></i></label>
-                    <input id="select_file" type="file" hidden="">
+
+                    <input type="hidden" name="msg_temp_id" class="msg_temp_id" value="">
                     <input type="hidden" name="receiver_id" value="1">
                     <input type="text" placeholder="Type a message..." name="message" class="fp_send_message">
                     <button class="fp__massage_btn" type="submit"><i class="fas fa-paper-plane"
@@ -80,13 +60,14 @@
                                 <div class="fp__chating_text">
                                     <p>${message.message}
                                     </p>
-                                    <span>sending</span>
                                 </div>
                             </div>
                             `;
 
 
                             $('.fp__chat_body').append(html);
+                            $('.unseen-message-count').text('0');
+                            $('.count-index-message').text('0');
                         });
                         scrollToBottom();
                     },
@@ -100,8 +81,12 @@
             });
 
 
+            //Send Message
             $('.chat_input').on('submit', function(e) {
                 e.preventDefault();
+                let msgId = Math.floor(Math.random() * (1 - 10000 + 1)) + 10000;
+                $('.msg_temp_id').val(msgId);
+
                 let formData = $(this).serialize();
 
                 $.ajax({
@@ -118,7 +103,7 @@
                             </div>
                             <div class="fp__chating_text">
                                 <p>${message}</p>
-                                <span>sending...</span>
+                                <span class="msg_sending ${msgId}">sending...</span>
                             </div>
                         </div> `;
 
@@ -127,8 +112,10 @@
                             scrollToBottom();
                         }
                     },
-                    success: function() {
-
+                    success: function(response) {
+                        if ($('.msg_temp_id').val() == response.msgId) {
+                            $('.' + msgId).remove();
+                        }
                     },
                     error: function(xhr, status, error) {
 

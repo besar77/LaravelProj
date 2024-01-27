@@ -31,4 +31,6 @@ window.Echo.private('chat.' + loggedInUserId)
                 // $('.got_new_message').html(html);
             }
         });
+
+        $('.message-envelope').addClass('beep');
     });

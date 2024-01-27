@@ -23,6 +23,11 @@
                                 @foreach ($senders as $sender)
                                     @php
                                         $chatUser = \App\Models\User::find($sender->sender_id);
+                                        $unseenMessages = \App\Models\Chat::where([
+                                            'sender_id' => $chatUser->id,
+                                            'receiver_id' => auth()->user()->id,
+                                            'seen' => 0,
+                                        ])->count();
                                     @endphp
 
                                     <li class="media fp_chat_user" data-name="{{ $chatUser->name }}"
@@ -33,6 +38,9 @@
                                         <div class="media-body">
                                             <div class="mt-0 mb-1 font-weight-bold">{{ $chatUser->name }}</div>
                                             <div class="text-warning text-small font-600-bold got_new_message">
+                                                @if ($unseenMessages > 0)
+                                                    <i class="beep"></i>new message
+                                                @endif
                                             </div>
                                         </div>
                                     </li>
@@ -54,6 +62,7 @@
                                 <input type="text" class="form-control fp_send_message" placeholder="Type a message"
                                     name="message">
                                 <input type="hidden" name="receiver_id" id="receiver_id" value="">
+                                <input type="hidden" name="msg_temp_id" class="msg_temp_id" value="">
                                 <button class="btn btn-primary">
                                     <i class="far fa-paper-plane"></i>
                                 </button>
@@ -112,7 +121,7 @@
                             <div class="chat-item ${message.sender_id == userId ? "chat-right" : "chat_left"} " style=""><img src="${avatar}" style="height:50px; width:50px; object-fit:cover;">
                                     <div class="chat-details">
                                         <div class="chat-text">${message.message}</div>
-                                        <div class="chat-time">sending...</div>
+
                                     </div>
                                 </div>
                             `;
@@ -130,8 +139,15 @@
                 })
             });
 
+
+            //Send Message
             $('#chat-form').on('submit', function(e) {
                 e.preventDefault();
+
+                var msgId = Math.floor(Math.random() * (1 - 10000 + 1)) + 10000;
+                // console.log('test', msgId)
+                $('.msg_temp_id').val(msgId);
+
                 let formData = $(this).serialize();
                 let avatar = "{{ auth()->user()->avatar }}";
                 $.ajax({
@@ -146,7 +162,7 @@
                             <div class="chat-item chat-right" style=""><img src="${avatar}">
                                     <div class="chat-details">
                                         <div class="chat-text">${message}</div>
-                                        <div class="chat-time">sending...</div>
+                                        <div class="chat-time ${msgId}">sending...</div>
                                     </div>
                                 </div>
                             `;
@@ -156,8 +172,12 @@
                             scrollToBottom();
                         }
                     },
-                    success: function() {
-
+                    success: function(response) {
+                        console.log(response);
+                        if (response.msgId == $('.msg_temp_id').val()) {
+                            console.log('hello');
+                            $('.' + msgId).remove();
+                        }
                     },
                     error: function(xhr, status, error) {
 
