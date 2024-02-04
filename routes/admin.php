@@ -99,5 +99,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
 
     //Daily Offer Routes
     Route::get('dailyOffer/search-product',[DailyOfferController::class,'prodSearch'])->name('dailyOffer.searchProduct');
+    Route::put('dailyOffer/title-update', [DailyOfferController::class, 'updateTitle'])->name('dailyOffer-title.update');
     Route::resource('dailyOffers',DailyOfferController::class);
+
 });

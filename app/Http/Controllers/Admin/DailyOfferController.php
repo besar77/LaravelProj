@@ -6,6 +6,7 @@ use App\DataTables\DailyOfferDataTable;
 use App\Http\Controllers\Controller;
 use App\Models\DailyOffer;
 use App\Models\Product;
+use App\Models\SectionTitle;
 use Illuminate\Http\Request;
 
 class DailyOfferController extends Controller
@@ -15,7 +16,9 @@ class DailyOfferController extends Controller
      */
     public function index(DailyOfferDataTable $dataTable)
     {
-        return $dataTable->render('admin.daily-offer.index');
+        $titles = SectionTitle::where('key', 'like', '%daily_offer%')->get();
+        // dd($titles);
+        return $dataTable->render('admin.daily-offer.index', compact('titles'));
     }
 
     function prodSearch(Request $request){
@@ -51,20 +54,16 @@ class DailyOfferController extends Controller
         return to_route('admin.dailyOffers.index');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
 
     /**
      * Show the form for editing the specified resource.
      */
     public function edit(string $id)
     {
-        //
+
+        $dailyOffer = DailyOffer::with('product')->findOrFail($id);
+        // dd($dailyOffer->product);
+        return view('admin.daily-offer.edit',compact('dailyOffer'));
     }
 
     /**
@@ -72,14 +71,57 @@ class DailyOfferController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $request->validate([
+            'prod_id' => 'required|integer',
+            'status' => 'boolean|required'
+        ]);
+
+        $offer = DailyOffer::findOrFail($id);
+        $offer->product_id = $request->prod_id;
+        $offer->status = $request->status;
+        $offer->save();
+
+        toastr()->success('Updated Successfully');
+        return to_route('admin.dailyOffers.index');
     }
+
+    public function updateTitle(Request $request)
+    {
+       $validatedData = $request->validate([
+            'daily_offer_top_title' => 'max:100',
+            'daily_offer_main_title' => 'max:200',
+            'daily_offer_sub_title' => 'max:300'
+        ]);
+
+        foreach($validatedData as $key => $v){
+            SectionTitle::updateOrCreate(
+                ['key' => $key],
+                ['value' => $v]
+            );
+        }
+
+
+        toastr()->success('Updated Succesfully');
+        return redirect()->back();
+    }
+
+
+
 
     /**
      * Remove the specified resource from storage.
      */
     public function destroy(string $id)
     {
-        //
+        try {
+            $dailyOffer = DailyOffer::findOrFail($id);
+
+            $dailyOffer->delete();
+            return response()->json(['status' => 'success', 'message' => 'Daily Offer deleted successfully']);
+        } catch (Exception $e) {
+            return response()->json(['status' => 'error', 'message' => $e->getMessage()], 500);
+        }
     }
+
+
 }
