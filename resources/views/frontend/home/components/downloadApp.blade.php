@@ -1,5 +1,5 @@
 <section class="fp__download mt_100 xs_mt_70">
-    <div class="fp__download_bg" style="background: url(images/download_bg.jpg);">
+    <div class="fp__download_bg" style="background: url({{ asset('frontend/images/download_bg.jpg') }});">
         <div class="fp__download_overlay">
             <div class="container">
                 <div class="row justify-content-between">

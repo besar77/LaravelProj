@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\AdminAuthController;
 use App\Http\Controllers\Admin\AdminDashboardController;
+use App\Http\Controllers\Admin\AppDownloadSectionController;
 use App\Http\Controllers\Admin\BannerSliderController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\ChatController;
@@ -111,5 +112,9 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
     //Chef Routes
     Route::put('chef/title-update', [ChefController::class, 'updateTitle'])->name('chef-title.update');
     Route::resource('chef',ChefController::class);
+
+    //App Download Routes
+    Route::get('app-download', [AppDownloadSectionController::class, 'index'])->name('app-download.index');
+    Route::post('app-download', [AppDownloadSectionController::class, 'store'])->name('app-download.store');
 
 });

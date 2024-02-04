@@ -203,7 +203,9 @@
             </li>
 
             <li
-                class="dropdown  {{ Request::is('admin/why-choose-us*') || Request::is('admin/slider*') ? 'active' : '' }}">
+                class="dropdown  {{ Request::is('admin/why-choose-us*') || Request::is('admin/slider*') || Request::is('admin/app-download*')
+                    ? 'active'
+                    : '' }}">
                 <a href="#" class="nav-link has-dropdown" data-toggle="dropdown">
                     <i class="fa fa-columns"></i><span>Sections</span>
                 </a>
@@ -229,6 +231,12 @@
                     <li class="{{ Request::is('admin/chef*') ? 'active' : '' }}">
                         <a class="nav-link" href="{{ route('admin.chef.index') }}">
                             Chefs
+                        </a>
+                    </li>
+
+                    <li class="{{ Request::is('admin/app-download*') ? 'active' : '' }}">
+                        <a class="nav-link" href="{{ route('admin.app-download.index') }}">
+                            App Download Section
                         </a>
                     </li>
 
