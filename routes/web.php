@@ -49,6 +49,7 @@ Route::group(['middleware' => 'auth'], function () {
 
 //show homepage
 Route::get('/', [FrontendController::class, 'index'])->name('home');
+Route::get('/chefs', [FrontendController::class, 'chef'])->name('chef');
 
 //show Product details page
 Route::get('/product/{slug}', [FrontendController::class, 'show'])->name('product.show');

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Frontend;
 use App\Http\Controllers\Controller;
 use App\Models\BannerSlider;
 use App\Models\Category;
+use App\Models\Chef;
 use App\Models\Coupon;
 use App\Models\DailyOffer;
 use App\Models\Product;
@@ -27,6 +28,7 @@ class FrontendController extends Controller
         $categories = Category::where(['show_at_home' => 1, 'status' => 1])->get();
         $dailyOffers = DailyOffer::with('product')->where('status',1)->take(15)->get();
         $bannerSliders = BannerSlider::where('status',1)->latest()->take(10)->get();
+        $chefs = Chef::where(['show_at_home' => 1, 'status' => 1])->get();
 
         // dd($sectionTitles);
 
@@ -38,15 +40,25 @@ class FrontendController extends Controller
                 'whyChooseUs',
                 'categories',
                 'dailyOffers',
-                'bannerSliders'
+                'bannerSliders',
+                'chefs'
             )
         );
     }
 
     function getSectionTitles(): Collection
     {
-        return SectionTitle::where('key', 'like', '%why_choose%')->orWhere('key', 'like', '%daily_offer%')->get();
-        // return SectionTitle::where('key', 'like', '%why_choose%')->get();
+        return SectionTitle::where('key', 'like', '%why_choose%')
+        ->orWhere('key', 'like', '%daily_offer%')
+        ->orWhere('key', 'like', '%chef%')
+        ->get();
+    }
+
+    function chef(){
+
+        $chefs = Chef::where('status',1)->paginate(8);
+
+        return view('frontend.pages.chefs',compact('chefs'));
     }
 
     public function show(string $slug): View

@@ -22,7 +22,24 @@ class ChefDataTable extends DataTable
     public function dataTable(QueryBuilder $query): EloquentDataTable
     {
         return (new EloquentDataTable($query))
-            ->addColumn('action', 'chef.action')
+        ->addColumn('action', function ($query) {
+            $edit = "<a href='" . route('admin.chef.edit', $query->id) . "' class='btn btn-primary'><i class='fas fa-edit'></i></a>";
+            $delete = "<a href='" . route('admin.chef.destroy', $query->id) . "' class='btn btn-danger ml-2 delete-item'><i class='fas fa-trash'></i></a>";
+
+            return $edit . $delete;
+        })
+        ->addColumn('image', function($query){
+            return '<img width="50px" src="' . asset($query->image) . '" />';
+        })
+        ->addColumn('status', function ($query) {
+            $statusClass = $query->status == 1 ? 'badge-primary' : 'badge-danger';
+            return "<span class='badge $statusClass'>" . ($query->status == 1 ? 'Active' : 'InActive') . "</span>";
+        })
+        ->addColumn('show_at_home', function ($query) {
+            $statusClass = $query->show_at_home == 1 ? 'badge-primary' : 'badge-danger';
+            return "<span class='badge $statusClass'>" . ($query->show_at_home == 1 ? 'Yes' : 'No') . "</span>";
+        })
+        ->rawColumns(['image', 'action', 'status','show_at_home'])
             ->setRowId('id');
     }
 
@@ -62,15 +79,17 @@ class ChefDataTable extends DataTable
     public function getColumns(): array
     {
         return [
+            Column::make('id'),
+            Column::make('image'),
+            Column::make('name'),
+            Column::make('title'),
+            Column::make('show_at_home'),
+            Column::make('status'),
             Column::computed('action')
                   ->exportable(false)
                   ->printable(false)
-                  ->width(60)
+                  ->width(100)
                   ->addClass('text-center'),
-            Column::make('id'),
-            Column::make('add your columns'),
-            Column::make('created_at'),
-            Column::make('updated_at'),
         ];
     }
 

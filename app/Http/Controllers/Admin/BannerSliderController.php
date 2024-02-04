@@ -70,7 +70,7 @@ class BannerSliderController extends Controller
     {
         try {
             $banner = BannerSlider::findOrFail($id);
-            // dd($whyChoseUs);
+            $this->removeImage($banner->banner);
             $banner->delete();
 
             return response()->json(['status' => 'success', 'message' => 'Deleted successfully']);
