@@ -124,7 +124,7 @@
                     <i class="fas fa-sliders-h"></i>Slider
                 </a>
             </li>
-            <li class="{{ Request::is('admin/slider*') ? 'active' : '' }}">
+            {{-- <li class="{{ Request::is('admin/slider*') ? 'active' : '' }}">
                 <a class="nav-link" href="{{ route('admin.dailyOffers.index') }}">
                     <i class="fas fa-tags"></i> Today Offers
                 </a>
@@ -133,7 +133,8 @@
                 <a class="nav-link" href="{{ route('admin.why-choose-us.index') }}">
                     <i class="fas fa-lightbulb"></i>Why choose us
                 </a>
-            </li>
+            </li> --}}
+
 
 
             <li
@@ -200,6 +201,34 @@
             <li class="{{ Request::is('admin/chat*') ? 'active' : '' }}">
                 <a class="nav-link" href="{{ route('admin.chat-index') }}"><i class="fas fa-wrench"></i>Messages</a>
             </li>
+
+            <li
+                class="dropdown  {{ Request::is('admin/why-choose-us*') || Request::is('admin/slider*') ? 'active' : '' }}">
+                <a href="#" class="nav-link has-dropdown" data-toggle="dropdown">
+                    <i class="fa fa-columns"></i><span>Sections</span>
+                </a>
+                <ul class="dropdown-menu">
+                    <li class="{{ Request::is('admin/why-choose-us*') ? 'active' : '' }}">
+                        <a class="nav-link" href="{{ route('admin.why-choose-us.index') }}">
+                            <i class="fas fa-lightbulb"></i>Why choose us
+                        </a>
+                    </li>
+
+                    <li class="{{ Request::is('admin/slider*') ? 'active' : '' }}">
+                        <a class="nav-link" href="{{ route('admin.dailyOffers.index') }}">
+                            <i class="fas fa-tags"></i> Today Offers
+                        </a>
+                    </li>
+
+                    <li class="{{ Request::is('admin/slider*') ? 'active' : '' }}">
+                        <a class="nav-link" href="{{ route('admin.bannerSlider.index') }}">
+                            <i class="fas fa-image"></i> Banner Slider
+                        </a>
+                    </li>
+
+                </ul>
+            </li>
+
             <li class="{{ Request::is('admin/setting*') ? 'active' : '' }}">
                 <a class="nav-link" href="{{ route('admin.setting.index') }}"><i
                         class="fas fa-wrench"></i>Settings</a>

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\AdminAuthController;
 use App\Http\Controllers\Admin\AdminDashboardController;
+use App\Http\Controllers\Admin\BannerSliderController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\ChatController;
 use App\Http\Controllers\Admin\CouponController;
@@ -101,5 +102,9 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
     Route::get('dailyOffer/search-product',[DailyOfferController::class,'prodSearch'])->name('dailyOffer.searchProduct');
     Route::put('dailyOffer/title-update', [DailyOfferController::class, 'updateTitle'])->name('dailyOffer-title.update');
     Route::resource('dailyOffers',DailyOfferController::class);
+
+
+    //Banner Slider Routes
+    Route::resource('bannerSlider',BannerSliderController::class);
 
 });
