@@ -210,25 +210,30 @@
                 <ul class="dropdown-menu">
                     <li class="{{ Request::is('admin/why-choose-us*') ? 'active' : '' }}">
                         <a class="nav-link" href="{{ route('admin.why-choose-us.index') }}">
-                            <i class="fas fa-lightbulb"></i>Why choose us
+                            Why choose us
                         </a>
                     </li>
 
                     <li class="{{ Request::is('admin/slider*') ? 'active' : '' }}">
                         <a class="nav-link" href="{{ route('admin.dailyOffers.index') }}">
-                            <i class="fas fa-tags"></i> Today Offers
+                            Today Offers
                         </a>
                     </li>
 
                     <li class="{{ Request::is('admin/slider*') ? 'active' : '' }}">
                         <a class="nav-link" href="{{ route('admin.bannerSlider.index') }}">
-                            <i class="fas fa-image"></i> Banner Slider
+                            Banner Slider
+                        </a>
+                    </li>
+
+                    <li class="{{ Request::is('admin/chef*') ? 'active' : '' }}">
+                        <a class="nav-link" href="{{ route('admin.chef.index') }}">
+                            Chefs
                         </a>
                     </li>
 
                 </ul>
             </li>
-
             <li class="{{ Request::is('admin/setting*') ? 'active' : '' }}">
                 <a class="nav-link" href="{{ route('admin.setting.index') }}"><i
                         class="fas fa-wrench"></i>Settings</a>

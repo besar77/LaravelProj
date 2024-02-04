@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\BannerSliderController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\ChatController;
+use App\Http\Controllers\Admin\ChefController;
 use App\Http\Controllers\Admin\CouponController;
 use App\Http\Controllers\Admin\DailyOfferController;
 use App\Http\Controllers\Admin\DeliveryAreaController;
@@ -106,5 +107,8 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
 
     //Banner Slider Routes
     Route::resource('bannerSlider',BannerSliderController::class);
+
+    //Chef Routes
+    Route::resource('chef',ChefController::class);
 
 });
